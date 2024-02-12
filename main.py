@@ -13,6 +13,10 @@ if len(sys.argv) < 2:
     print("Please provide at least one ticker symbol as an argument, separated by commas if multiple.")
     sys.exit()
 
+show_chart = False
+if len(sys.argv) == 3 and sys.argv[2] == 'show':
+    show_chart = True
+    
 # Split the input argument into a list of ticker symbols
 tickers = sys.argv[1].split(',')
 is_short_below_long_trend = False
@@ -70,8 +74,8 @@ for ticker in tickers:
                 is_short_below_long_trend = True
 
         # determine if a buy signal is nearing:
-        if (is_short_below_long_trend and is_within_range(df['short_ma'], df['long_ma'], 0.03)
-                and is_increasing(df['short_ma'], 30)):
+        if ((is_short_below_long_trend and is_within_range(df['short_ma'], df['long_ma'], 0.03)
+                and is_increasing(df['short_ma'], 30)) or show_chart):
             print("Stock: " + ticker)
             backtesting.back_test(ticker)
             # Plot the moving averages
